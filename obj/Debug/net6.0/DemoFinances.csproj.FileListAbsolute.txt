@@ -1,0 +1,15 @@
+D:\Project\DemoFinances\bin\Debug\net6.0\DemoFinances.exe
+D:\Project\DemoFinances\bin\Debug\net6.0\DemoFinances.deps.json
+D:\Project\DemoFinances\bin\Debug\net6.0\DemoFinances.runtimeconfig.json
+D:\Project\DemoFinances\bin\Debug\net6.0\DemoFinances.dll
+D:\Project\DemoFinances\bin\Debug\net6.0\DemoFinances.pdb
+D:\Project\DemoFinances\obj\Debug\net6.0\DemoFinances.csproj.AssemblyReference.cache
+D:\Project\DemoFinances\obj\Debug\net6.0\DemoFinances.GeneratedMSBuildEditorConfig.editorconfig
+D:\Project\DemoFinances\obj\Debug\net6.0\DemoFinances.AssemblyInfoInputs.cache
+D:\Project\DemoFinances\obj\Debug\net6.0\DemoFinances.AssemblyInfo.cs
+D:\Project\DemoFinances\obj\Debug\net6.0\DemoFinances.csproj.CoreCompileInputs.cache
+D:\Project\DemoFinances\obj\Debug\net6.0\DemoFinances.dll
+D:\Project\DemoFinances\obj\Debug\net6.0\refint\DemoFinances.dll
+D:\Project\DemoFinances\obj\Debug\net6.0\DemoFinances.pdb
+D:\Project\DemoFinances\obj\Debug\net6.0\DemoFinances.genruntimeconfig.cache
+D:\Project\DemoFinances\obj\Debug\net6.0\ref\DemoFinances.dll
