@@ -1,4 +1,24 @@
 
 .vs/DemoFinances/DesignTimeBuild/.dtbcache.v2
-.vs/DemoFinances/FileContentIndex/43bac455-6e46-48db-9226-7e1e51ffef75.vsidx
+.vs/DemoFinances/DesignTimeBuild/.dtbcache.v2
 desktop.ini
+*.v2
+*.vsidx
+*.lock
+DemoFinances/.vs/DemoFinances/v17/.suo
+*.2
+*.1
+DemoFinances/DemoFinances.csproj
+DemoFinances/obj/Debug/net6.0/.NETCoreApp,Version=v6.0.AssemblyAttributes.cs
+DemoFinances/obj/Debug/net6.0/DemoFinances.AssemblyInfo.cs
+DemoFinances/obj/Debug/net6.0/DemoFinances.AssemblyInfoInputs.cache
+DemoFinances/obj/Debug/net6.0/DemoFinances.assets.cache
+DemoFinances/obj/Debug/net6.0/DemoFinances.csproj.AssemblyReference.cache
+*.editorconfig
+DemoFinances/obj/Debug/net6.0/DemoFinances.GlobalUsings.g.cs
+DemoFinances/obj/DemoFinances.csproj.nuget.dgspec.json
+DemoFinances/obj/DemoFinances.csproj.nuget.g.props
+*.targets
+DemoFinances/obj/project.assets.json
+DemoFinances/obj/project.nuget.cache
+DemoFinances/StartEndDate.cs
