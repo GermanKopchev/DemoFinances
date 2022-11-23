@@ -8,6 +8,7 @@ namespace DemoFinances
 {
     internal class Calculate
     {
+        //bond interplated rate
         public Dictionary<int,double> intrplatedRate()
         {
             Dictionary<int, double> dictionary = new Dictionary<int, double>();
@@ -22,6 +23,7 @@ namespace DemoFinances
             dictionary.Add(48, 0.05);
             return dictionary;
         }
+
 
         public List<DateTime> datesList(DateTime startDate, DateTime endDate, int interestPeriod)
         {
@@ -91,7 +93,7 @@ namespace DemoFinances
                 capital -= redemption;
                 if (i == bondDates.Count - 1)
                 {
-                    redemption = 100000;
+                    redemption = Convert.ToInt32(capital);
                 }
                 dateOneYearBefore = new DateTime(bondDates[i].Year - 1, bondDates[i].Month, bondDates[i].Day);
                 dtPeriod = Days360(dateOneYearBefore, bondDates[i], true) / 360;
@@ -123,9 +125,78 @@ namespace DemoFinances
             double dirtyPrice = dirtyValue / bond.Nominal * 100;
         }
 
+        //Evaluation
+        public Dictionary<int, double> zeroRiskInterestCurve()
+        {
+            Dictionary<int, double> dictionary = new Dictionary<int, double>();
+            dictionary.Add(6, 0.034);
+            dictionary.Add(12, 0.034);
+            dictionary.Add(18, 0.034);
+            dictionary.Add(24, 0.036);
+            dictionary.Add(30, 0.036);
+            dictionary.Add(36, 0.036);
+            dictionary.Add(42, 0.036);
+            dictionary.Add(48, 0.038);
+            dictionary.Add(54, 0.038);
+            dictionary.Add(60, 0.038);
+            dictionary.Add(66, 0.038);
+            dictionary.Add(72, 0.038);
+            dictionary.Add(78, 0.038);
+            dictionary.Add(84, 0.04);
+            dictionary.Add(90, 0.04);
+            dictionary.Add(96, 0.04);
+            return dictionary;
+        }
+
+        public Dictionary<int, double> scenarioCurve(double add)
+        {
+            Dictionary<int, double> dictionary = zeroRiskInterestCurve();
+            foreach (KeyValuePair<int, double> pair in dictionary)
+            {
+                dictionary[pair.Key] = pair.Value + add;
+            }
+            return dictionary;
+        }
+
+        public List<double> discoutFactors(int scenario)
+        {
+            Dictionary<int, double> scenCurve = scenarioCurve(scenario);
+            List<double> discoutFactors = new List<double>();
+            foreach(KeyValuePair<int,double> pair in scenCurve)
+            {
+                discoutFactors.Add((1/(1+pair.Value*pair.Key/12)));
+            }
+            discoutFactors.Insert(0, 1);
+            return discoutFactors;
+        }
+
         public void calculateFloaterBond(Bond bond)
         {
-
+            List<DateTime> bondDates = new List<DateTime>();
+            double amortization = 0;
+            double capital = bond.Nominal;
+            List<double> dicountFactors = discoutFactors(30);
+            double netPresentValue = 0;
+            double durationInYears = 0;
+            for(int i = 1; i < bondDates.Count; i++)
+            {
+                DateTime dateOneYearBefore = new DateTime(bondDates[i].Year - 1, bondDates[i].Month, bondDates[i].Day);
+                double periodLength = Days360(dateOneYearBefore, bondDates[i], true) / 360;
+                double distance = Days360(bond.StartDate, bondDates[i], true) / 360;
+                capital -= amortization;
+                if (i == bondDates.Count - 1)
+                {
+                    amortization = capital;
+                }
+                double interestRate = (dicountFactors[i - 1] / dicountFactors[i] - 1) / periodLength;
+                double interestPay = periodLength * capital * interestRate;
+                double totalPay = amortization + interestPay;
+                double value = (totalPay * dicountFactors[i]);
+                netPresentValue += value;
+                double forDuration = value * distance;
+                durationInYears += forDuration;
+            }
+            durationInYears /= netPresentValue;
         }
     }
 }
