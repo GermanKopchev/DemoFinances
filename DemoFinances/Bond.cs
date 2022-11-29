@@ -7,16 +7,16 @@
         int interestPeriod;
         long nominal;
         double interestRate;
-        bool regularOrBullet;
+        bool regular;
 
-        public Bond(DateTime startDate, DateTime endDate, int interest, long nominal, double interestRate, bool bulletOrRegular)
+        public Bond(DateTime startDate, DateTime endDate, int interest, long nominal, double interestRate, bool regular)
         {
             this.startDate = startDate;
             this.endDate = endDate;
             this.interestPeriod = interest;
             this.nominal = nominal;
             this.interestRate = interestRate;
-            this.regularOrBullet = bulletOrRegular;
+            this.regular = regular;
         }
 
         public DateTime StartDate { get => startDate; set => startDate = value; }
@@ -24,6 +24,6 @@
         public int InterestPeriod { get => interestPeriod; set => interestPeriod = value; }
         public long Nominal { get => nominal; set => nominal = value; }
         public double InterestRate { get => interestRate; set => interestRate = value; }
-        public bool RegularOrBullet { get => regularOrBullet; set => regularOrBullet = value; }
+        public bool Regular { get => regular; set => regular = value; }
     }
 }

@@ -75,13 +75,13 @@
             List<BondCalculationForPeriod> list = new List<BondCalculationForPeriod>();
             List<DateTime> bondDates = datesList(bond.StartDate, bond.EndDate, bond.InterestPeriod);
             double redemption;
-            if (bond.RegularOrBullet)
+            if (bond.Regular)
             {
                 redemption = 0;
             }
             else
             {
-                redemption = Math.Round((bond.Nominal * 360 / Days360(bond.StartDate, bond.EndDate, true)), 2);
+                redemption = Math.Round(Convert.ToDouble(bond.Nominal/(bondDates.Count-1)), 2);
             }
             double capital = bond.Nominal;
             Dictionary<int, double> intrplatedRates = intrplatedRate();
@@ -91,7 +91,7 @@
             for (int i = 1; i < bondDates.Count; i++)
             {
                 capital -= redemption;
-                if (i == bondDates.Count - 1 && bond.RegularOrBullet)
+                if (i == bondDates.Count - 1 && bond.Regular)
                 {
                     redemption = Convert.ToInt32(capital);
                 }
