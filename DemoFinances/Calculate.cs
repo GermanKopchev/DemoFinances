@@ -1,5 +1,6 @@
 ﻿namespace DemoFinances
 {
+
     internal class Calculate
     {
         //bond interplated rate
@@ -19,6 +20,7 @@
         }
 
 
+
         public List<DateTime> datesList(DateTime startDate, DateTime endDate, int interestPeriod)
         {
             List<DateTime> dates = new List<DateTime>();
@@ -31,12 +33,12 @@
             return dates;
         }
 
-        public double Days360(DateTime startDate, DateTime endDate, bool europenOrUSMethod)
+        public double Days360(DateTime startDate, DateTime endDate, day360Method method)
         {
             int dayStart = startDate.Day;
             int dayEnd = endDate.Day;
 
-            if (europenOrUSMethod)
+            if (method == day360Method.Europion)
             {
                 if (dayStart == 31)
                 {
@@ -70,61 +72,60 @@
             return date.Month == 2 && date.Day == DateTime.DaysInMonth(date.Year, date.Month);
         }
 
-        public void calculateBond(Bond bond)
+        public List<BondCalculationForPeriod> calculateBond(Bond bond)
         {
             List<BondCalculationForPeriod> list = new List<BondCalculationForPeriod>();
             List<DateTime> bondDates = datesList(bond.StartDate, bond.EndDate, bond.InterestPeriod);
-            double redemption;
-            if (bond.Regular)
+            double redemption = 0;
+            switch(bond.BondType)
             {
-                redemption = 0;
-            }
-            else
-            {
-                redemption = Math.Round(Convert.ToDouble(bond.Nominal/(bondDates.Count-1)), 2);
+                case BondType.Regular:
+                    
+                    break;
+                case BondType.Bullet:
+                    redemption = Math.Round(Convert.ToDouble(bond.Nominal / (bondDates.Count - 1)), 2);
+                    break;
+                case BondType.Annuity:
+
+                    break;
+                default: 
+                    break;
             }
             double capital = bond.Nominal;
-            Dictionary<int, double> intrplatedRates = intrplatedRate();
-            double totalValue = 0;
-            double cleanValue = 0;
-            double accruedInterest = 0;
             for (int i = 1; i < bondDates.Count; i++)
             {
-                capital -= redemption;
-                if (i == bondDates.Count - 1 && bond.Regular)
+                if (i == bondDates.Count - 1 && bond.BondType == BondType.Regular)
                 {
                     redemption = Convert.ToInt32(capital);
                 }
                 DateTime dateOneYearBefore = new DateTime(bondDates[i].Year - 1, bondDates[i].Month, bondDates[i].Day);
-                double dtPeriod = Days360(dateOneYearBefore, bondDates[i], true) / 360;
-                double interestRatePayment = bond.InterestRate * capital * dtPeriod;
-                double totalPayment = interestRatePayment + redemption;
-                double distance = Days360(bond.StartDate, bondDates[i], true) / 360;
-                double discoutFactor;
-                if (distance <= 1)
-                {
-                    discoutFactor = 1 / (1 + distance * intrplatedRates[Convert.ToInt32(distance * 12)]);
-                }
-                else
-                {
-                    discoutFactor = 1 / Math.Pow(1 + distance, intrplatedRates[Convert.ToInt32(distance * 12)]);
-                }
-                double value = totalPayment * discoutFactor;
-                totalValue += value;
-                if (Convert.ToDouble(bond.InterestPeriod / 12) > distance)
-                {
-                    accruedInterest = interestRatePayment * (1 - distance);
-                }
-                else
-                {
-                    cleanValue += value;
-                }
-
-                list.Add(new BondCalculationForPeriod(bondDates[i], bond.InterestRate, redemption, capital, dtPeriod, interestRatePayment, totalPayment, distance, discoutFactor, value));
+                double dtPeriod = Days360(dateOneYearBefore, bondDates[i], day360Method.Europion) / 360;
+                BondCalculationForPeriod bondCalculation = new BondCalculationForPeriod(bondDates[i - 1], bondDates[i], bond.InterestRate, redemption, capital, dtPeriod);
+                capital -= redemption;
+                list.Add(bondCalculation);
             }
-            double cleanPrice = cleanValue / bond.Nominal * 100;
-            double dirtyValue = cleanPrice + accruedInterest;
-            double dirtyPrice = dirtyValue / bond.Nominal * 100;
+            advancedBondCalculation(list);
+            return list;
+        }
+
+        public void advancedBondCalculation(List<BondCalculationForPeriod> list)
+        {
+            Dictionary<int, double> intrplatedRates = intrplatedRate();
+            foreach (BondCalculationForPeriod bondCalculation in list)
+            {
+                bondCalculation.InterestRatePayment = bondCalculation.InterestRate * bondCalculation.Capital * bondCalculation.DTPeriod;
+                bondCalculation.TotalPayment = bondCalculation.InterestRatePayment + bondCalculation.Redemption;
+                bondCalculation.Distance = Days360(list.First().StartDate, bondCalculation.EndDate, day360Method.Europion) / 360;
+                if (bondCalculation.Distance <= 1)
+                {
+                    bondCalculation.DiscountFactors = 1 / (1 + bondCalculation.Distance * intrplatedRates[Convert.ToInt32(bondCalculation.Distance * 12)]);
+                }
+                else
+                {
+                    bondCalculation.DiscountFactors = 1 / Math.Pow(1 + bondCalculation.Distance, intrplatedRates[Convert.ToInt32(bondCalculation.Distance * 12)]);
+                }
+                bondCalculation.Value = bondCalculation.TotalPayment * bondCalculation.DiscountFactors;
+            }
         }
 
         //Evaluation
@@ -183,8 +184,8 @@
             for (int i = 1; i < bondDates.Count; i++)
             {
                 DateTime dateOneYearBefore = new DateTime(bondDates[i].Year - 1, bondDates[i].Month, bondDates[i].Day);
-                double periodLength = Days360(dateOneYearBefore, bondDates[i], true) / 360;
-                double distance = Days360(bond.StartDate, bondDates[i], true) / 360;
+                double periodLength = Days360(dateOneYearBefore, bondDates[i], day360Method.Europion) / 360;
+                double distance = Days360(bond.StartDate, bondDates[i], day360Method.Europion) / 360;
                 capital -= amortization;
                 if (i == bondDates.Count - 1)
                 {

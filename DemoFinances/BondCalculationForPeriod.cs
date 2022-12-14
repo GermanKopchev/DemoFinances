@@ -2,7 +2,8 @@
 {
     internal class BondCalculationForPeriod
     {
-        private DateTime date;
+        private DateTime startDate;
+        private DateTime endDate;
         private double interestRate;
         private double redemption;
         private double capital;
@@ -13,21 +14,18 @@
         private double discountFactors;
         private double value;
 
-        public BondCalculationForPeriod(DateTime date, double interestRate, double redemption, double capital, double dTPeriod, double interestRatePayment, double totalPayment, double distance, double discountFactors, double value)
+        public BondCalculationForPeriod(DateTime startDate, DateTime endDate, double interestRate, double redemption, double capital, double dTPeriod)
         {
-            this.date = date;
+            this.startDate = startDate;
+            this.endDate = endDate;
             this.interestRate = interestRate;
             this.redemption = redemption;
             this.capital = capital;
             this.dTPeriod = dTPeriod;
-            this.interestRatePayment = interestRatePayment;
-            this.totalPayment = totalPayment;
-            this.distance = distance;
-            this.discountFactors = discountFactors;
-            this.value = value;
         }
 
-        public DateTime Date { get => date; set => date = value; }
+        public DateTime StartDate { get => startDate; set => startDate = value; }
+        public DateTime EndDate { get => endDate; set => endDate = value; }
         public double InterestRate { get => interestRate; set => interestRate = value; }
         public double Redemption { get => redemption; set => redemption = value; }
         public double Capital { get => capital; set => capital = value; }

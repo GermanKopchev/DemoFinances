@@ -1,5 +1,6 @@
 ﻿namespace DemoFinances
 {
+
     internal class Bond
     {
         private DateTime startDate;
@@ -7,16 +8,16 @@
         int interestPeriod;
         long nominal;
         double interestRate;
-        bool regular;
+        BondType bondType;
 
-        public Bond(DateTime startDate, DateTime endDate, int interest, long nominal, double interestRate, bool regular)
+        public Bond(DateTime startDate, DateTime endDate, int interest, long nominal, double interestRate, BondType bondType)
         {
             this.startDate = startDate;
             this.endDate = endDate;
             this.interestPeriod = interest;
             this.nominal = nominal;
             this.interestRate = interestRate;
-            this.regular = regular;
+            this.bondType = bondType;
         }
 
         public DateTime StartDate { get => startDate; set => startDate = value; }
@@ -24,6 +25,6 @@
         public int InterestPeriod { get => interestPeriod; set => interestPeriod = value; }
         public long Nominal { get => nominal; set => nominal = value; }
         public double InterestRate { get => interestRate; set => interestRate = value; }
-        public bool Regular { get => regular; set => regular = value; }
+        public BondType BondType { get => bondType; set => bondType = value; }
     }
 }

@@ -11,7 +11,7 @@ internal class Program
         double interestRate = 0.0445;
 
 
-        Bond bond = new Bond(startDate, endDate, interest, nominal, interestRate, true);
+        Bond bond = new Bond(startDate, endDate, interest, nominal, interestRate, BondType.Regular);
         Calculate calculation = new Calculate();
         calculation.calculateBond(bond);
     }
